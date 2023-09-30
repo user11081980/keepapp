@@ -1,5 +1,5 @@
 {
-	"name": "Create View Location",
+	"name": "View Location",
 	"properties": {
 		"content": {
 			"query": "USE [Doordash]\nGO\n\n\nCREATE OR ALTER VIEW [Location]\nAS\nSELECT\n    [Restaurant].[RestaurantId],\n    [Locations].[ZipCode]\nFROM\n    [Restaurant]\nCROSS APPLY\n    OPENJSON([Restaurant].[Locations], '$')\nWITH (\n    [ZipCode] NVARCHAR(255) '$.postCode'\n) AS [Locations]",
