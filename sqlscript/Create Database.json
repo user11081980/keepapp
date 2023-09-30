@@ -1,0 +1,17 @@
+{
+	"name": "Create Database",
+	"properties": {
+		"content": {
+			"query": "USE [master]\nGO\n\nCREATE DATABASE [Doordash]\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

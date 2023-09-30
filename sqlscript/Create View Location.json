@@ -1,0 +1,17 @@
+{
+	"name": "Create View Location",
+	"properties": {
+		"content": {
+			"query": "USE [Doordash]\nGO\n\n\nCREATE OR ALTER VIEW [Location]\nAS\nSELECT\n    [Restaurant].[RestaurantId],\n    [Locations].[ZipCode]\nFROM\n    [Restaurant]\nCROSS APPLY\n    OPENJSON([Restaurant].[Locations], '$')\nWITH (\n    [ZipCode] NVARCHAR(255) '$.postCode'\n) AS [Locations]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "Doordash",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

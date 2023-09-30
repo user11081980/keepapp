@@ -1,0 +1,17 @@
+{
+	"name": "Create View MenuChange",
+	"properties": {
+		"content": {
+			"query": "USE [Doordash]\nGO\n\nCREATE OR ALTER VIEW [MenuChange]\n AS\n SELECT\n    [Id] AS [MenuChangeId],\n    [Submarket],\n    [District],\n    [CustomStoreId] AS [RestaurantId],\n    [MenuItemId],\n    CAST([createdOn] AS DATETIMEOFFSET) AS [CreatedOn],\n    [ChangeOperation],\n    [Name],\n    [Description],\n    CASE\n        WHEN [displayPrice] != '' OR [displayPrice] IS NOT NULL THEN CAST([displayPrice] AS MONEY)\n        ELSE NULL\n    END AS [CurrentDisplayPrice],\n    CAST(JSON_VALUE([propertyChanges], '$[0].previousValue') AS MONEY) AS [PreviousDisplayPrice],\n    [LoggingContainerName] AS [Category],\n    [CustomRatingAverageRating] AS [AverageRating],\n    [LoggingNumStarRating] AS [RatingCount],\n    [RestaurantDetailPriceRangeDisplayString] AS [PriceRange],\n    [RestaurantDetailBusinessTags] AS [BusinessTags]\n FROM OPENROWSET(​PROVIDER = 'CosmosDB',\n                CONNECTION = 'Account=cosmos-keepapp;Database=doordash',\n                OBJECT = 'menuchanges',\n                SERVER_CREDENTIAL = 'cosmos-keepapp'\n)\nWITH (\n    [id] CHAR(36),\n    [createdOn] NVARCHAR(MAX),\n    [changeOperation] VARCHAR(255) '$.changeOperation.value',\n    [menuItemId] NVARCHAR(255),\n    [name] NVARCHAR(255),\n    [description] NVARCHAR(MAX),\n    [displayPrice] NVARCHAR(255),\n    [loggingContainerName] NVARCHAR(255),\n    [customRatingAverageRating] FLOAT,\n    [customStoreId] BIGINT,\n    [loggingNumStarRating] BIGINT,\n    [restaurantDetailBusinessTags] VARCHAR(MAX),\n    [restaurantDetailPriceRangeDisplayString] NVARCHAR(5),\n    [propertyChanges] VARCHAR(MAX),\n    [submarket] NVARCHAR(255),\n    [district] NVARCHAR(255)\n) AS [MenuChange]\nGO\n\nSELECT TOP 100 [tags].* FROM [MenuChange]\nCROSS APPLY OPENJSON([MenuChange].restaurantDetailBusinessTags, '$') WITH ([Name] NVARCHAR(255) '$.name') AS [tags]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "Doordash",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
