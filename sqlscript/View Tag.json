@@ -1,5 +1,5 @@
 {
-	"name": "Create View Tag",
+	"name": "View Tag",
 	"properties": {
 		"content": {
 			"query": "USE [Doordash]\nGO\n\nCREATE OR ALTER VIEW [Tag]\nAS\nSELECT\n    [Restaurant].[RestaurantId],\n    [BusinessTags].[Name]\nFROM\n    [Restaurant]\nCROSS APPLY\n    OPENJSON([Restaurant].[BusinessTags], '$')\nWITH (\n    [Name] NVARCHAR(255) '$.name'\n) AS [BusinessTags]",
